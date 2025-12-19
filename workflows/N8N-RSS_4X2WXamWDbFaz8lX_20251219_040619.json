@@ -1,0 +1,730 @@
+{
+  "updatedAt": "2025-11-14T01:28:54.000Z",
+  "createdAt": "2025-11-13T09:11:21.737Z",
+  "id": "4X2WXamWDbFaz8lX",
+  "name": "N8N-RSS",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "b6187241-6780-4262-bfa0-42f8f08329db",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://36kr.com/feed",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "fd29aaea-1bca-49b9-8c8b-bf5c2cd9b2dc",
+      "name": "RSS Read",
+      "notesInFlow": true,
+      "notes": "测试添加节点注释"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43029d0e-cd7a-4274-9618-bdf7bc7b371c",
+              "name": "title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "6116cbf0-4e4e-4f74-b485-8209e006e388",
+              "name": "pubDate",
+              "value": "={{ $json.pubDate }}",
+              "type": "string"
+            },
+            {
+              "id": "d7b55f83-8c0d-4eec-a2c3-b1bd8269d6be",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "af96ac4a-75f7-4c3c-98f8-5aa3a40606fb",
+              "name": "contentSnippet",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            },
+            {
+              "id": "cbbbfb2f-45cd-48b8-90a4-1f0ea7be3923",
+              "name": "transDate",
+              "value": "={{(new Date($json.isoDate)).getTime()}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "95f676c6-a2d6-4d6d-a53e-8b5e1c04e3eb",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2d28b394-471d-45ed-bcf2-bacbc55fcabe",
+              "leftValue": "={{ $json.transDate }}",
+              "rightValue": "={{ $now.minus({days: 1}).toMillis() }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "6bca8a19-d97c-4316-8bb1-6c615cae3017",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "transDate",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        832,
+        0
+      ],
+      "id": "01aed6e8-c3da-44eb-8b2b-025f23266b9f",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "jsCode": "let res = \"\"\nfor (const item of $input.all()){\n  res = res + '_ [' + item.json.title + '](' + item.json.link + ' \"\": \\n' + item.json.content + \"\\n\\n\"\n}\nreturn {data: res}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "ae0d5eb8-4758-42ff-bfc8-7003ebb2853c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "你是一名专业的新闻编辑助手，帮我整理新闻简报"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "3e895b6c-a30c-409f-ab93-494a32d38629",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        208
+      ],
+      "id": "6f431a10-ef61-453d-b550-66a700e1abc7",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "zGK4iR3vCnOh8xCw",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        0
+      ],
+      "id": "8118eea0-4af9-4b06-b8bc-1709c351d678",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "fromEmail": "245963038@qq.com",
+        "toEmail": "jxtan@sina.com",
+        "subject": "AI简报",
+        "html": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1808,
+        0
+      ],
+      "id": "11d9dc14-5de1-43d2-9deb-ae8e958160a1",
+      "name": "Send email",
+      "webhookId": "0dd5fbd9-4c72-472e-a7ea-71b820545553",
+      "credentials": {
+        "smtp": {
+          "id": "8BvAXKmC42HIzg8O",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        160
+      ],
+      "id": "949c4169-1841-4c90-9dac-1fef8874678e",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "e5d86854-c59e-44b6-861a-4e3d20c07ee2",
+  "activeVersionId": "e5d86854-c59e-44b6-861a-4e3d20c07ee2",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T09:11:21.743Z",
+      "createdAt": "2025-11-13T09:11:21.743Z",
+      "role": "workflow:owner",
+      "workflowId": "4X2WXamWDbFaz8lX",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-15T06:26:19.269Z",
+    "createdAt": "2025-12-15T06:26:19.269Z",
+    "versionId": "e5d86854-c59e-44b6-861a-4e3d20c07ee2",
+    "workflowId": "4X2WXamWDbFaz8lX",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "triggerAtHour": 10,
+                "triggerAtMinute": 30
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -48,
+          0
+        ],
+        "id": "b6187241-6780-4262-bfa0-42f8f08329db",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "url": "https://36kr.com/feed",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.rssFeedRead",
+        "typeVersion": 1.2,
+        "position": [
+          208,
+          0
+        ],
+        "id": "fd29aaea-1bca-49b9-8c8b-bf5c2cd9b2dc",
+        "name": "RSS Read",
+        "notesInFlow": true,
+        "notes": "测试添加节点注释"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "43029d0e-cd7a-4274-9618-bdf7bc7b371c",
+                "name": "title",
+                "value": "={{ $json.title }}",
+                "type": "string"
+              },
+              {
+                "id": "6116cbf0-4e4e-4f74-b485-8209e006e388",
+                "name": "pubDate",
+                "value": "={{ $json.pubDate }}",
+                "type": "string"
+              },
+              {
+                "id": "d7b55f83-8c0d-4eec-a2c3-b1bd8269d6be",
+                "name": "content",
+                "value": "={{ $json.content }}",
+                "type": "string"
+              },
+              {
+                "id": "af96ac4a-75f7-4c3c-98f8-5aa3a40606fb",
+                "name": "contentSnippet",
+                "value": "={{ $json.contentSnippet }}",
+                "type": "string"
+              },
+              {
+                "id": "cbbbfb2f-45cd-48b8-90a4-1f0ea7be3923",
+                "name": "transDate",
+                "value": "={{(new Date($json.isoDate)).getTime()}}",
+                "type": "number"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          0
+        ],
+        "id": "95f676c6-a2d6-4d6d-a53e-8b5e1c04e3eb",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "2d28b394-471d-45ed-bcf2-bacbc55fcabe",
+                "leftValue": "={{ $json.transDate }}",
+                "rightValue": "={{ $now.minus({days: 1}).toMillis() }}",
+                "operator": {
+                  "type": "number",
+                  "operation": "gt"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.2,
+        "position": [
+          624,
+          0
+        ],
+        "id": "6bca8a19-d97c-4316-8bb1-6c615cae3017",
+        "name": "Filter"
+      },
+      {
+        "parameters": {
+          "sortFieldsUi": {
+            "sortField": [
+              {
+                "fieldName": "transDate",
+                "order": "descending"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.sort",
+        "typeVersion": 1,
+        "position": [
+          832,
+          0
+        ],
+        "id": "01aed6e8-c3da-44eb-8b2b-025f23266b9f",
+        "name": "Sort"
+      },
+      {
+        "parameters": {
+          "jsCode": "let res = \"\"\nfor (const item of $input.all()){\n  res = res + '_ [' + item.json.title + '](' + item.json.link + ' \"\": \\n' + item.json.content + \"\\n\\n\"\n}\nreturn {data: res}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          1040,
+          0
+        ],
+        "id": "ae0d5eb8-4758-42ff-bfc8-7003ebb2853c",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.data }}",
+          "options": {
+            "systemMessage": "你是一名专业的新闻编辑助手，帮我整理新闻简报"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          1248,
+          0
+        ],
+        "id": "3e895b6c-a30c-409f-ab93-494a32d38629",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+        "typeVersion": 1,
+        "position": [
+          1120,
+          208
+        ],
+        "id": "6f431a10-ef61-453d-b550-66a700e1abc7",
+        "name": "DeepSeek Chat Model",
+        "credentials": {
+          "deepSeekApi": {
+            "id": "zGK4iR3vCnOh8xCw",
+            "name": "DeepSeek account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "markdownToHtml",
+          "markdown": "={{ $json.output }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.markdown",
+        "typeVersion": 1,
+        "position": [
+          1600,
+          0
+        ],
+        "id": "8118eea0-4af9-4b06-b8bc-1709c351d678",
+        "name": "Markdown"
+      },
+      {
+        "parameters": {
+          "fromEmail": "245963038@qq.com",
+          "toEmail": "jxtan@sina.com",
+          "subject": "AI简报",
+          "html": "={{ $json.data }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.emailSend",
+        "typeVersion": 2.1,
+        "position": [
+          1808,
+          0
+        ],
+        "id": "11d9dc14-5de1-43d2-9deb-ae8e958160a1",
+        "name": "Send email",
+        "webhookId": "0dd5fbd9-4c72-472e-a7ea-71b820545553",
+        "credentials": {
+          "smtp": {
+            "id": "8BvAXKmC42HIzg8O",
+            "name": "SMTP account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -48,
+          160
+        ],
+        "id": "949c4169-1841-4c90-9dac-1fef8874678e",
+        "name": "When clicking ‘Execute workflow’"
+      }
+    ],
+    "connections": {
+      "Schedule Trigger": {
+        "main": [
+          []
+        ]
+      },
+      "RSS Read": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Filter",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter": {
+        "main": [
+          [
+            {
+              "node": "Sort",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sort": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DeepSeek Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Markdown",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Markdown": {
+        "main": [
+          [
+            {
+              "node": "Send email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "RSS Read",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
