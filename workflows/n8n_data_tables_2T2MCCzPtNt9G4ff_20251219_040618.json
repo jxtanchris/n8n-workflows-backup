@@ -1,0 +1,425 @@
+{
+  "updatedAt": "2025-11-06T08:58:59.000Z",
+  "createdAt": "2025-11-06T07:46:54.850Z",
+  "id": "2T2MCCzPtNt9G4ff",
+  "name": "n8n_data_tables",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "客户信息录入",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "姓名"
+            },
+            {
+              "fieldLabel": "年龄",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "联系电话",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "公司"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        144
+      ],
+      "id": "7ba383aa-791d-4fea-9d95-fa5f47a9deb8",
+      "name": "On form submission",
+      "webhookId": "25622f79-d8e6-4360-b0a8-2d35648d9ad4"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "sA4GDAYUhkzT4vCQ",
+          "mode": "list",
+          "cachedResultName": "Customer",
+          "cachedResultUrl": "/projects/SETuOI0q3TN4aDy1/datatables/sA4GDAYUhkzT4vCQ"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "full_name": "={{ $json['姓名'] }}",
+            "age": "={{ $json['年龄'] }}",
+            "email": "={{ $json.email }}",
+            "phone": "={{ $json['联系电话'] }}",
+            "company": "={{ $json['公司'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "age",
+              "displayName": "age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        144
+      ],
+      "id": "0eb52ab6-1e72-42cf-84a4-2bbcf1b0a462",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        -256
+      ],
+      "id": "320f07be-aed7-4fc3-9f0e-0488255273b7",
+      "name": "When chat message received",
+      "webhookId": "2106b323-a2d6-4d5c-820a-537c6e14fab2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -48
+      ],
+      "id": "ef762625-4cf6-44e5-b87a-4980ff6e59bc",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "zGK4iR3vCnOh8xCw",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -256
+      ],
+      "id": "a79bfac0-e1d5-4bca-bf75-8a87a6274df5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sA4GDAYUhkzT4vCQ",
+          "mode": "list",
+          "cachedResultName": "Customer",
+          "cachedResultUrl": "/projects/SETuOI0q3TN4aDy1/datatables/sA4GDAYUhkzT4vCQ"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "full_name",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        144,
+        -16
+      ],
+      "id": "cd58f2f0-1355-48d3-80fb-3010eaac85e6",
+      "name": "customer_name"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sA4GDAYUhkzT4vCQ",
+          "mode": "list",
+          "cachedResultName": "Customer",
+          "cachedResultUrl": "/projects/SETuOI0q3TN4aDy1/datatables/sA4GDAYUhkzT4vCQ"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "company",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -16
+      ],
+      "id": "95a93f0c-b3e5-4729-8fc1-4a73d23671d0",
+      "name": "company_search"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sA4GDAYUhkzT4vCQ",
+          "mode": "list",
+          "cachedResultName": "Customer",
+          "cachedResultUrl": "/projects/SETuOI0q3TN4aDy1/datatables/sA4GDAYUhkzT4vCQ"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -48
+      ],
+      "id": "3979aa10-37ed-4610-92e7-e05890442328",
+      "name": "email_search"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "glm-4.5",
+          "mode": "list",
+          "cachedResultName": "glm-4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "c7e91e0f-698c-4f02-affc-35f36ed54102",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Ve2tzNIaTALOfHr4",
+          "name": "zhipu"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sA4GDAYUhkzT4vCQ",
+          "mode": "list",
+          "cachedResultName": "Customer",
+          "cachedResultUrl": "/projects/SETuOI0q3TN4aDy1/datatables/sA4GDAYUhkzT4vCQ"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "age",
+              "condition": "gte",
+              "keyValue": "={{ $fromAI('conditions0_Value', ``, 'number') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "1d9484ab-227f-424b-a7bc-adcc0a6ca9e5",
+      "name": "age_gsearch"
+    }
+  ],
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "customer_name": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "company_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "email_search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "age_gsearch": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b2b9f7be-b57d-451f-a4bd-b254e42a16d7",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-06T07:46:54.856Z",
+      "createdAt": "2025-11-06T07:46:54.856Z",
+      "role": "workflow:owner",
+      "workflowId": "2T2MCCzPtNt9G4ff",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
