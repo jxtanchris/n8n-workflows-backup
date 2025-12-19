@@ -1,0 +1,422 @@
+{
+  "updatedAt": "2025-11-17T03:04:53.000Z",
+  "createdAt": "2025-11-17T03:04:32.683Z",
+  "id": "oNT9nrow4rVXI3zz",
+  "name": "Kling",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f832eb34-0b50-41f4-b0b8-c55768ab0f2c",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        32,
+        272
+      ],
+      "typeVersion": 1,
+      "notes": "This manualTrigger node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.API_BASE_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"kling\",\n  \"task_type\": \"ai_try_on\",\n  \"input\": {\n    \"model_input\": \"{{ $json.model_input }}\",\n    \"dress_input\": \"{{ $json.dress_input }}\",\n    \"upper_input\": \"{{ $json.upper_input }}\",\n    \"lower_input\": \"{{ $json.lower_input }}\",\n    \"batch_size\": 1\n  }\n} ",
+        "options": {}
+      },
+      "id": "0ab45222-5a37-4e96-9d09-c32b1e916490",
+      "name": "Kling Virtual Try-On Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        480,
+        272
+      ],
+      "typeVersion": 4.2,
+      "notes": "This httpRequest node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "5f61ee56-4ebe-411f-95e6-b47d9741e7a2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.data.status }}",
+                    "rightValue": "completed"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5e88835b-63dc-485c-bfb2-8cb440eb9608",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        832,
+        320
+      ],
+      "typeVersion": 3.2,
+      "notes": "This switch node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "url": "{{ $env.BASE_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Preset Parameters').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0f1121c6-a5f3-4dba-93d8-b4dc54c83c17",
+      "name": "Get Kling Video Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1040,
+        560
+      ],
+      "typeVersion": 4.2,
+      "notes": "This httpRequest node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.API_BASE_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Preset Parameters').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"model\": \"kling\",\n    \"task_type\": \"video_generation\",\n    \"input\": {\n        \"version\": \"1.6\",\n        \"image_url\": \"{{ $json.data.output.works[0].image.resource }}\",\n        \"prompt\": \"{{ $('Preset Parameters').item.json.generate_video_prompt }}\"\n    }\n} ",
+        "options": {}
+      },
+      "id": "31af55af-3bab-4305-9cb3-9e4b6f66da9f",
+      "name": "Generate kling video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1008,
+        320
+      ],
+      "typeVersion": 4.2,
+      "notes": "This httpRequest node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"x-api-key\":\"\",\n  \"model_input\": \"\",\n  \"dress_input\": \"\",\n  \"upper_input\":\"\",\n  \"lower_input\":\"\",\n  \"generate_video_prompt\": \"Walk on the catwalk, turn around, and finally stand still and pose\"\n}\n",
+        "options": {}
+      },
+      "id": "6fc9b712-5e2f-4a6c-886a-07b3f102e9c4",
+      "name": "Preset Parameters",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        240,
+        272
+      ],
+      "typeVersion": 3.4,
+      "notes": "This set node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "url": "{{ $env.BASE_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Preset Parameters').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "180ce7e4-6dfc-4692-bcb5-f88b3c481fc3",
+      "name": "Get Kling Virtual Try-On Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        288,
+        592
+      ],
+      "typeVersion": 4.2,
+      "notes": "This httpRequest node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "e97a02cc-8d1d-4500-bce5-0a296c792b76",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "completed"
+            },
+            {
+              "id": "50b63a7a-52b5-4766-a859-96ac1ff949ec",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "failed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "425c8c84-4275-4dbb-ab52-b8deb54aa403",
+      "name": "Check Data Status",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        512,
+        592
+      ],
+      "typeVersion": 2.2,
+      "notes": "This if node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {},
+      "id": "ca28202f-b790-4759-bcd1-e04a53758be2",
+      "name": "Wait for Image Generation",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        32,
+        592
+      ],
+      "webhookId": "af79053d-1291-4dd2-889e-4593dbbb2512",
+      "typeVersion": 1.1,
+      "notes": "This wait node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {},
+      "id": "feb0ad49-9212-4238-8967-cf5d64df5092",
+      "name": "Wait for Video Generation",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        784,
+        560
+      ],
+      "webhookId": "af79053d-1291-4dd2-889e-4593dbbb2512",
+      "typeVersion": 1.1,
+      "notes": "This wait node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "5f61ee56-4ebe-411f-95e6-b47d9741e7a2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.data.status }}",
+                    "rightValue": "completed"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c95c0d75-885d-4632-905c-10868551881d",
+      "name": "Check Video Data Status",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1424,
+        304
+      ],
+      "typeVersion": 3.2,
+      "notes": "This switch node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "e97a02cc-8d1d-4500-bce5-0a296c792b76",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "completed"
+            },
+            {
+              "id": "50b63a7a-52b5-4766-a859-96ac1ff949ec",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "failed"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dc0aaeb2-82d3-4bb9-aec9-199fa7f909f1",
+      "name": "Get Video Data Status",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1264,
+        560
+      ],
+      "typeVersion": 2.2,
+      "notes": "This if node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"video_url\": \"{{ $json.data.output.video_url }}\"\n}\n ",
+        "options": {}
+      },
+      "id": "134cd21b-c78d-4522-a00a-a7ca9f7c3605",
+      "name": "Get Final Video URL",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1632,
+        304
+      ],
+      "typeVersion": 3.4,
+      "notes": "This set node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "## Generate 360° Virtual Try-on Videos for Clothing with Kling API (unofficial)\nThis tool is designed for e-commerce platforms, fashion brands, content creators, and content influencers. By uploading model and clothing images and linking your PiAPI account, you can swiftly generate a realistic video of the model sporting the outfit with a 360° turn, offering an immersive viewing experience.",
+        "height": 220,
+        "width": 460
+      },
+      "id": "b6fd1340-7f80-40aa-8889-85b3d76984f1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "## Generate Virtual Try-on Image\nUpload model url, users have two solutions to upload clothing url: \n1. Upload `dress_input`\n2. Upload 'upper_input` and 'lower_input`",
+        "height": 200,
+        "width": 340
+      },
+      "id": "6d345b72-863f-4981-8a23-834e7bcaca72",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        832
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "## Generate Final Video \nWait for generation and get the output url in the final node.",
+        "width": 340
+      },
+      "id": "7ccfd616-087b-4dd2-8d21-2d827b2632d1",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        592
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "548c4b4a-9193-4dbd-a184-203a4b80ef75",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-17T03:04:32.690Z",
+      "createdAt": "2025-11-17T03:04:32.690Z",
+      "role": "workflow:owner",
+      "workflowId": "oNT9nrow4rVXI3zz",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
