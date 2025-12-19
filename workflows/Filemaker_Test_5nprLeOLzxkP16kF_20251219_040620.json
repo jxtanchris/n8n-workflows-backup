@@ -1,0 +1,212 @@
+{
+  "updatedAt": "2025-11-17T03:06:04.000Z",
+  "createdAt": "2025-11-13T07:25:20.608Z",
+  "id": "5nprLeOLzxkP16kF",
+  "name": "Filemaker_Test",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "action": "create",
+        "layout": "ODATA",
+        "fieldsParametersUi": {
+          "fields": [
+            {
+              "name": "=name",
+              "value": "Harshil"
+            },
+            {
+              "name": "=id",
+              "value": "123"
+            }
+          ]
+        }
+      },
+      "name": "FileMaker 1",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        208,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "f37e5b8b-d8b3-49de-99d1-0e66ccad46fe",
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {},
+      "name": "On clicking 'execute'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "8669fb6d-e5f7-4c23-894c-ce9e556b01db",
+      "notes": "This manualTrigger node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "action": "create",
+        "layout": "My Form Layout",
+        "fieldsParametersUi": {
+          "fields": [
+            {
+              "name": "first_name",
+              "value": "Harshil"
+            },
+            {
+              "name": "last_name",
+              "value": "Agrawal"
+            }
+          ]
+        }
+      },
+      "name": "FileMaker 2",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        208,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "c060142d-dcbe-44e7-95a8-f5c82826c425",
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "action": "edit",
+        "layout": "My Form Layout",
+        "recid": "={{$json[\"response\"][\"recordId\"]}}",
+        "modId": "={{$json[\"response\"][\"modId\"]}}",
+        "fieldsParametersUi": {
+          "fields": [
+            {
+              "name": "address_country",
+              "value": "Germany"
+            }
+          ]
+        }
+      },
+      "name": "FileMaker2",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        432,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "0888e3f9-d3be-4246-9351-32a1d65f9af1",
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "layout": "My Form Layout",
+        "recid": "={{$node[\"FileMaker\"].json[\"response\"][\"recordId\"]}}"
+      },
+      "name": "FileMaker3",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        608,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "7593eecd-4563-4182-bf6f-4fbf1adc753f",
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "errorMessage": "={{ $json.messages[0] }}"
+      },
+      "id": "00ca5f68-b244-4158-8bcc-c47ee3fe722c",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        752,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "action": "records"
+      },
+      "type": "n8n-nodes-base.filemaker",
+      "typeVersion": 1,
+      "position": [
+        624,
+        224
+      ],
+      "id": "898da896-d339-476b-8913-024afa0763a4",
+      "name": "FileMaker",
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "On clicking 'execute'": {
+      "main": [
+        [
+          {
+            "node": "FileMaker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FileMaker 1": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3fce4de7-6c08-4500-8d7f-e4b159b57519",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T07:25:20.612Z",
+      "createdAt": "2025-11-13T07:25:20.612Z",
+      "role": "workflow:owner",
+      "workflowId": "5nprLeOLzxkP16kF",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
