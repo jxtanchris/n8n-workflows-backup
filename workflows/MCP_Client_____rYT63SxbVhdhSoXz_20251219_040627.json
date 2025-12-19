@@ -1,0 +1,508 @@
+{
+  "updatedAt": "2025-09-25T01:43:01.000Z",
+  "createdAt": "2025-09-25T01:37:30.602Z",
+  "id": "rYT63SxbVhdhSoXz",
+  "name": "MCP Client 工作流",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "425982f8-cf35-41d1-baae-057cf3020d98"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -96
+      ],
+      "id": "24916e41-ef1b-42a1-a768-7b10dd4a53c0",
+      "name": "MCP Server Trigger",
+      "webhookId": "425982f8-cf35-41d1-baae-057cf3020d98"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1024,
+        144
+      ],
+      "id": "b6eb509c-a0a4-40a6-852e-fcb26c21025c",
+      "name": "Gmail",
+      "webhookId": "a3217e68-0780-4fc6-9243-840ec5488563",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "d7zzya2hD3yARzKe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "gitskills",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}",
+          "mode": "name"
+        },
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "labels": [],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        144
+      ],
+      "id": "ac9a1634-2a24-444c-8010-756e879e4b4d",
+      "name": "GitHubCreateIssue",
+      "webhookId": "2ac9b665-2cfb-4a18-8a01-b7c5df0ca3d3",
+      "credentials": {
+        "githubApi": {
+          "id": "91sfk1dMtcc1AAlW",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "repository",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "gitskills",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        144
+      ],
+      "id": "02b1ffce-5e2b-4e17-8c3d-a5db26a3e5ef",
+      "name": "QueryProjectDataOnGitHub",
+      "webhookId": "7d24ac7c-3a12-46ef-843c-ee5c5b42a0a6",
+      "credentials": {
+        "githubApi": {
+          "id": "91sfk1dMtcc1AAlW",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -32
+      ],
+      "id": "86c7f931-544a-4484-bde4-befebba3cfab",
+      "name": "When chat message received",
+      "webhookId": "b4043b82-fcaf-4b3d-a588-24247db3fe86"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "你是一个专业的自动化助手。你的任务是理解用户的自然语言指令，并将其转化为结构化的操作。请尽可能准确地执行用户输入的指令，并在执行后提供简洁明了的结果反馈。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        1824,
+        -32
+      ],
+      "id": "e74f7c0d-c209-47a3-a522-c6c915c95e04",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        208
+      ],
+      "id": "6232cf3e-0720-4b0e-bf42-6734eab7ee60",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "zGK4iR3vCnOh8xCw",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://9179-112-12-185-57.ngrok-free.app/mcp/425982f8-cf35-41d1-baae-057cf3020d98/sse",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        2048,
+        208
+      ],
+      "id": "f0ad5dae-5e9c-402f-9d4b-3e4dc9390043",
+      "name": "MCP Client"
+    }
+  ],
+  "connections": {
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHubCreateIssue": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QueryProjectDataOnGitHub": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "9207abf7-64b0-4bf0-93d4-32275e03f682",
+  "activeVersionId": "9207abf7-64b0-4bf0-93d4-32275e03f682",
+  "triggerCount": 2,
+  "shared": [
+    {
+      "updatedAt": "2025-09-25T01:37:30.613Z",
+      "createdAt": "2025-09-25T01:37:30.613Z",
+      "role": "workflow:owner",
+      "workflowId": "rYT63SxbVhdhSoXz",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-15T06:26:19.269Z",
+    "createdAt": "2025-12-15T06:26:19.269Z",
+    "versionId": "9207abf7-64b0-4bf0-93d4-32275e03f682",
+    "workflowId": "rYT63SxbVhdhSoXz",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "425982f8-cf35-41d1-baae-057cf3020d98"
+        },
+        "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "typeVersion": 1,
+        "position": [
+          720,
+          -96
+        ],
+        "id": "24916e41-ef1b-42a1-a768-7b10dd4a53c0",
+        "name": "MCP Server Trigger",
+        "webhookId": "425982f8-cf35-41d1-baae-057cf3020d98"
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+          "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+          "emailType": "text",
+          "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmailTool",
+        "typeVersion": 2.1,
+        "position": [
+          1024,
+          144
+        ],
+        "id": "b6eb509c-a0a4-40a6-852e-fcb26c21025c",
+        "name": "Gmail",
+        "webhookId": "a3217e68-0780-4fc6-9243-840ec5488563",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "d7zzya2hD3yARzKe",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "owner": {
+            "__rl": true,
+            "value": "gitskills",
+            "mode": "name"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}",
+            "mode": "name"
+          },
+          "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+          "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+          "labels": [],
+          "assignees": []
+        },
+        "type": "n8n-nodes-base.githubTool",
+        "typeVersion": 1.1,
+        "position": [
+          560,
+          144
+        ],
+        "id": "ac9a1634-2a24-444c-8010-756e879e4b4d",
+        "name": "GitHubCreateIssue",
+        "webhookId": "2ac9b665-2cfb-4a18-8a01-b7c5df0ca3d3",
+        "credentials": {
+          "githubApi": {
+            "id": "91sfk1dMtcc1AAlW",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "repository",
+          "operation": "get",
+          "owner": {
+            "__rl": true,
+            "value": "gitskills",
+            "mode": "name"
+          },
+          "repository": {
+            "__rl": true,
+            "mode": "name",
+            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}"
+          }
+        },
+        "type": "n8n-nodes-base.githubTool",
+        "typeVersion": 1.1,
+        "position": [
+          784,
+          144
+        ],
+        "id": "02b1ffce-5e2b-4e17-8c3d-a5db26a3e5ef",
+        "name": "QueryProjectDataOnGitHub",
+        "webhookId": "7d24ac7c-3a12-46ef-843c-ee5c5b42a0a6",
+        "credentials": {
+          "githubApi": {
+            "id": "91sfk1dMtcc1AAlW",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "public": true,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          1600,
+          -32
+        ],
+        "id": "86c7f931-544a-4484-bde4-befebba3cfab",
+        "name": "When chat message received",
+        "webhookId": "b4043b82-fcaf-4b3d-a588-24247db3fe86"
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "你是一个专业的自动化助手。你的任务是理解用户的自然语言指令，并将其转化为结构化的操作。请尽可能准确地执行用户输入的指令，并在执行后提供简洁明了的结果反馈。"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.9,
+        "position": [
+          1824,
+          -32
+        ],
+        "id": "e74f7c0d-c209-47a3-a522-c6c915c95e04",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+        "typeVersion": 1,
+        "position": [
+          1856,
+          208
+        ],
+        "id": "6232cf3e-0720-4b0e-bf42-6734eab7ee60",
+        "name": "DeepSeek Chat Model",
+        "credentials": {
+          "deepSeekApi": {
+            "id": "zGK4iR3vCnOh8xCw",
+            "name": "DeepSeek account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sseEndpoint": "https://9179-112-12-185-57.ngrok-free.app/mcp/425982f8-cf35-41d1-baae-057cf3020d98/sse",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "typeVersion": 1,
+        "position": [
+          2048,
+          208
+        ],
+        "id": "f0ad5dae-5e9c-402f-9d4b-3e4dc9390043",
+        "name": "MCP Client"
+      }
+    ],
+    "connections": {
+      "Gmail": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GitHubCreateIssue": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "QueryProjectDataOnGitHub": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DeepSeek Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MCP Client": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
