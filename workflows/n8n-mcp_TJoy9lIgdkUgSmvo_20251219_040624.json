@@ -1,0 +1,552 @@
+{
+  "updatedAt": "2025-10-15T08:50:34.000Z",
+  "createdAt": "2025-09-24T07:36:58.868Z",
+  "id": "TJoy9lIgdkUgSmvo",
+  "name": "n8n-mcp",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "6782d14e-41cf-409c-96ec-0ca5d446f84c"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "81d315e5-9a62-455d-8bdd-ea3955abbc03",
+      "name": "MCP Server Trigger",
+      "webhookId": "6782d14e-41cf-409c-96ec-0ca5d446f84c"
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "jxtanchris",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "=gitskills",
+          "mode": "name"
+        },
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+        "labels": [],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        224
+      ],
+      "id": "206d3f77-bad5-451a-a504-74f5c857b5b7",
+      "name": "Create an issue in GitHub",
+      "webhookId": "6af86aea-a365-4a84-a8ee-f04280fd5ce7",
+      "credentials": {
+        "githubApi": {
+          "id": "91sfk1dMtcc1AAlW",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "repository",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "jxtanchris",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.githubTool",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        304
+      ],
+      "id": "7a8e96ec-e415-41a2-9f30-3e9ecca238ab",
+      "name": "Get a repository in GitHub",
+      "webhookId": "61cb1072-9292-448c-907d-70229a91aa07",
+      "credentials": {
+        "githubApi": {
+          "id": "91sfk1dMtcc1AAlW",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        304
+      ],
+      "id": "b0dfda29-acea-479b-ad3c-cf967cb05614",
+      "name": "Send a message in Gmail",
+      "webhookId": "d685b5a6-f0bf-4253-be36-70aa7409e44e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "d7zzya2hD3yARzKe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        272
+      ],
+      "id": "457a261f-85b5-4f9a-b856-6a61b5d5748a",
+      "name": "When chat message received",
+      "webhookId": "ce44218d-d16a-48b0-91d5-108189000e7a"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "你是一个专业的自动化助手。你的任务是理解用户的自然语言指令，并将其转化为结构化的操作。请尽可能准确的执行用户输入的指令，并在执行后提供简洁明了的结果反馈。"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        928,
+        272
+      ],
+      "id": "4c24a20a-f052-4a1b-a92a-f179e87b449b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        800,
+        496
+      ],
+      "id": "130e5db8-7db2-44e0-aa34-0414e11c6842",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "zGK4iR3vCnOh8xCw",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://fiducial-rosita-interlocally.ngrok-free.dev/mcp/6782d14e-41cf-409c-96ec-0ca5d446f84c",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        512
+      ],
+      "id": "21a1863e-09d3-4b32-8d8d-cc65ba53f02b",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        976,
+        496
+      ],
+      "id": "63fefc85-5253-453e-a539-c5f4430bfd25",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "Create an issue in GitHub": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a repository in GitHub": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "25788e9b-8bbd-4ffa-b178-9e4a53fa79ef",
+  "activeVersionId": "25788e9b-8bbd-4ffa-b178-9e4a53fa79ef",
+  "triggerCount": 2,
+  "shared": [
+    {
+      "updatedAt": "2025-09-24T07:36:58.873Z",
+      "createdAt": "2025-09-24T07:36:58.873Z",
+      "role": "workflow:owner",
+      "workflowId": "TJoy9lIgdkUgSmvo",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-15T06:26:19.269Z",
+    "createdAt": "2025-12-15T06:26:19.269Z",
+    "versionId": "25788e9b-8bbd-4ffa-b178-9e4a53fa79ef",
+    "workflowId": "TJoy9lIgdkUgSmvo",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "6782d14e-41cf-409c-96ec-0ca5d446f84c"
+        },
+        "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+        "typeVersion": 2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "81d315e5-9a62-455d-8bdd-ea3955abbc03",
+        "name": "MCP Server Trigger",
+        "webhookId": "6782d14e-41cf-409c-96ec-0ca5d446f84c"
+      },
+      {
+        "parameters": {
+          "owner": {
+            "__rl": true,
+            "value": "jxtanchris",
+            "mode": "name"
+          },
+          "repository": {
+            "__rl": true,
+            "value": "=gitskills",
+            "mode": "name"
+          },
+          "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+          "body": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Body', ``, 'string') }}",
+          "labels": [],
+          "assignees": []
+        },
+        "type": "n8n-nodes-base.githubTool",
+        "typeVersion": 1.1,
+        "position": [
+          16,
+          224
+        ],
+        "id": "206d3f77-bad5-451a-a504-74f5c857b5b7",
+        "name": "Create an issue in GitHub",
+        "webhookId": "6af86aea-a365-4a84-a8ee-f04280fd5ce7",
+        "credentials": {
+          "githubApi": {
+            "id": "91sfk1dMtcc1AAlW",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "repository",
+          "operation": "get",
+          "owner": {
+            "__rl": true,
+            "value": "jxtanchris",
+            "mode": "name"
+          },
+          "repository": {
+            "__rl": true,
+            "mode": "name",
+            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repository_Name', ``, 'string') }}"
+          }
+        },
+        "type": "n8n-nodes-base.githubTool",
+        "typeVersion": 1.1,
+        "position": [
+          192,
+          304
+        ],
+        "id": "7a8e96ec-e415-41a2-9f30-3e9ecca238ab",
+        "name": "Get a repository in GitHub",
+        "webhookId": "61cb1072-9292-448c-907d-70229a91aa07",
+        "credentials": {
+          "githubApi": {
+            "id": "91sfk1dMtcc1AAlW",
+            "name": "GitHub account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+          "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+          "emailType": "text",
+          "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmailTool",
+        "typeVersion": 2.1,
+        "position": [
+          400,
+          304
+        ],
+        "id": "b0dfda29-acea-479b-ad3c-cf967cb05614",
+        "name": "Send a message in Gmail",
+        "webhookId": "d685b5a6-f0bf-4253-be36-70aa7409e44e",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "d7zzya2hD3yARzKe",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "public": true,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          720,
+          272
+        ],
+        "id": "457a261f-85b5-4f9a-b856-6a61b5d5748a",
+        "name": "When chat message received",
+        "webhookId": "ce44218d-d16a-48b0-91d5-108189000e7a"
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "你是一个专业的自动化助手。你的任务是理解用户的自然语言指令，并将其转化为结构化的操作。请尽可能准确的执行用户输入的指令，并在执行后提供简洁明了的结果反馈。"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          928,
+          272
+        ],
+        "id": "4c24a20a-f052-4a1b-a92a-f179e87b449b",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+        "typeVersion": 1,
+        "position": [
+          800,
+          496
+        ],
+        "id": "130e5db8-7db2-44e0-aa34-0414e11c6842",
+        "name": "DeepSeek Chat Model",
+        "credentials": {
+          "deepSeekApi": {
+            "id": "zGK4iR3vCnOh8xCw",
+            "name": "DeepSeek account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "endpointUrl": "https://fiducial-rosita-interlocally.ngrok-free.dev/mcp/6782d14e-41cf-409c-96ec-0ca5d446f84c",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+        "typeVersion": 1.1,
+        "position": [
+          1136,
+          512
+        ],
+        "id": "21a1863e-09d3-4b32-8d8d-cc65ba53f02b",
+        "name": "MCP Client"
+      },
+      {
+        "parameters": {},
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          976,
+          496
+        ],
+        "id": "63fefc85-5253-453e-a539-c5f4430bfd25",
+        "name": "Simple Memory"
+      }
+    ],
+    "connections": {
+      "Create an issue in GitHub": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a repository in GitHub": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message in Gmail": {
+        "ai_tool": [
+          [
+            {
+              "node": "MCP Server Trigger",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "DeepSeek Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MCP Client": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  },
+  "tags": []
+}
