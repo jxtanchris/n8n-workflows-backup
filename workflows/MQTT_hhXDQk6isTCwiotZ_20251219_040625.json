@@ -1,0 +1,136 @@
+{
+  "updatedAt": "2025-11-17T03:03:31.000Z",
+  "createdAt": "2025-11-17T03:03:19.187Z",
+  "id": "hhXDQk6isTCwiotZ",
+  "name": "MQTT",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "MQTT trigger subscribed to a topic called wokwi-weather via a Mosquitto MQTT broker. The trigger receives the temperature and humidity payloads from a DHT22 sensor connected to a remote ESP32 microcontroller ",
+        "height": 120,
+        "width": 340
+      },
+      "id": "c33babd1-87ef-45d0-9c0c-fd39706c96ab",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "Javascript code to extract the temperature and humidity values to ensure correct JSON format for the database",
+        "height": 100
+      },
+      "id": "8e63597a-abb5-42cd-aa7e-eddd146749b4",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        464,
+        0
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "HTTP request node posts temperature and humidity data from the DHT22 sensor to the InfluxDB data bucket running on a local host {{ $env.WEBHOOK_URL }}",
+        "height": 120,
+        "width": 260
+      },
+      "id": "7961d5ce-2159-4787-b1ee-aa45ba60a3db",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        0
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "topics": "wokwi-weather",
+        "options": {}
+      },
+      "id": "5b0d1dfe-4d9d-4fc3-a509-2a374120f291",
+      "name": "Remote Sensor MQTT Trigger",
+      "type": "n8n-nodes-base.mqttTrigger",
+      "position": [
+        128,
+        144
+      ],
+      "typeVersion": 1,
+      "notes": "This mqttTrigger node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.API_BASE_URL }}<Organization ID>&bucket=<InfluxDB bucket name>&precision=s",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Token  <API Token value generated in InfluxDB>"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={{ $json.payload }}",
+        "options": {}
+      },
+      "id": "df85e328-be42-4ba4-94fe-34b2686d369d",
+      "name": "Data ingest to InfluxDB bucket",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        912,
+        144
+      ],
+      "notesInFlow": true,
+      "typeVersion": 4.2,
+      "notes": "This httpRequest node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Try to parse the incoming message as JSON\nlet data;\ntry {\n  data = JSON.parse($json.message); // $json.message is expected to be a JSON string\n} catch (e) {\n  // If parsing fails, throw an error\n  throw new Error(\"Invalid JSON in MQTT message\");\n}\n\n// Get the topic from the input, or use a default value\nconst topic = $json.topic || \"unknown-topic\";\n\n// Make sure humidity and temp are numbers\nif (typeof data.humidity !== \"number\" || typeof data.temp !== \"number\") {\n  throw new Error(\"Missing or invalid humidity/temp in MQTT message\");\n}\n\n// Create a formatted string like: \"topic_name humidity=45,temp=22\"\nconst line = `${topic} humidity=${data.humidity},temp=${data.temp}`;\n\n// Return the result in the expected format\nreturn [\n  {\n    json: {\n      payload: line\n    }\n  }\n];"
+      },
+      "id": "ea66b9ed-c362-4b8f-816b-c0d706f99f46",
+      "name": "Payload data preparation node",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        528,
+        144
+      ],
+      "typeVersion": 2,
+      "notes": "This code node performs automated tasks as part of the workflow."
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "779e4bd2-5a9b-491e-aff0-843f69e4722b",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-17T03:03:19.196Z",
+      "createdAt": "2025-11-17T03:03:19.196Z",
+      "role": "workflow:owner",
+      "workflowId": "hhXDQk6isTCwiotZ",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
