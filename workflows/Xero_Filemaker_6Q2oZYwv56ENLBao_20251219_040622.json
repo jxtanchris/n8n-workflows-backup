@@ -1,0 +1,276 @@
+{
+  "updatedAt": "2025-11-17T03:05:50.000Z",
+  "createdAt": "2025-11-13T07:23:16.449Z",
+  "id": "6Q2oZYwv56ENLBao",
+  "name": "Xero_Filemaker",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{$json[\"source_data\"]}}",
+        "dataPropertyName": "target_data",
+        "secret": "YOUR_CREDENTIAL_HERE",
+        "encoding": "base64"
+      },
+      "id": "443cedc7-61fb-4581-a500-7c3b5e0cb9b5",
+      "name": "Crypto",
+      "type": "n8n-nodes-base.crypto",
+      "position": [
+        -960,
+        240
+      ],
+      "typeVersion": 1,
+      "notes": "This crypto node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "setAllData": false,
+        "destinationKey": "YOUR_CREDENTIAL_HERE",
+        "options": {}
+      },
+      "id": "e9f446ac-2c10-4231-84c8-2194ad8934d3",
+      "name": "Move Binary Data",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "position": [
+        -1360,
+        240
+      ],
+      "typeVersion": 1,
+      "notes": "This moveBinaryData node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "source_data",
+              "value": "={{$json[\"raw_data\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "92f60737-1e09-4089-826b-aca1dd50bb4c",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1168,
+        240
+      ],
+      "typeVersion": 1,
+      "notes": "This set node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$node[\"Crypto\"].json[\"target_data\"]}}",
+              "value2": "={{$node[\"Xero Webhook\"].json[\"headers\"][\"x-xero-signature\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "b0ac2662-082c-418d-8903-37674d6605c3",
+      "name": "If Node",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -736,
+        240
+      ],
+      "typeVersion": 1,
+      "notes": "This if node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "331b1dd0-eaf6-4a48-aa0e-bde77a2771d8",
+      "name": "Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        -528,
+        128
+      ],
+      "typeVersion": 1,
+      "notes": "This respondToWebhook node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "21c2b3b7-58cd-4616-af20-a408661ee5fc",
+      "name": "Unauthorised",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [
+        -528,
+        320
+      ],
+      "typeVersion": 1,
+      "notes": "This respondToWebhook node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "action": "create",
+        "layout": "Webhooks",
+        "fieldsParametersUi": {
+          "fields": [
+            {
+              "name": "json",
+              "value": "={{$node[\"Set\"].json[\"source_data\"]}}"
+            }
+          ]
+        }
+      },
+      "id": "08c5795d-c5c3-4bd2-893a-cdc7dc6827a0",
+      "name": "Create webhook record",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        -288,
+        128
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "action": "performscript",
+        "layout": "Webhooks",
+        "script": "processWebhook",
+        "scriptParam": "={{ $json.response.recordId }}"
+      },
+      "id": "106febda-2f73-48a9-b27c-984b0cd80857",
+      "name": "Perform processWebhook script",
+      "type": "n8n-nodes-base.filemaker",
+      "position": [
+        -64,
+        128
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "fileMaker": {
+          "id": "Y2vGXQQ7x8nVE9M4",
+          "name": "FileMaker_Local_211"
+        }
+      },
+      "notes": "This filemaker node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "## Script Parameter\nPasses the record id as script parameter to be used in your processWebhook script"
+      },
+      "id": "c1980017-611e-47c9-aa00-1813c4d037f8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "content": "## Input\nAdd your Xero webhook secret here",
+        "height": 121.3065326633166,
+        "width": 158.74371859296477
+      },
+      "id": "0d300118-c389-4c97-bc12-3a6fc4873345",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -976,
+        128
+      ],
+      "typeVersion": 1,
+      "notes": "This stickyNote node performs automated tasks as part of the workflow."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "filemaker-webhook",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "afffbfb0-cbf1-44c2-8e6f-dbaf35fbcfd7",
+      "name": "Xero Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -1568,
+        240
+      ],
+      "webhookId": "4cf50a61-b550-4ee6-984d-ad8c94e2b5c2",
+      "typeVersion": 1,
+      "notes": "This webhook node performs automated tasks as part of the workflow."
+    }
+  ],
+  "connections": {
+    "Xero Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Success": {
+      "main": [
+        [
+          {
+            "node": "Create webhook record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create webhook record": {
+      "main": [
+        [
+          {
+            "node": "Perform processWebhook script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c81dac43-8954-4c66-83df-4e0908b5c5e0",
+  "activeVersionId": null,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-13T07:23:16.456Z",
+      "createdAt": "2025-11-13T07:23:16.456Z",
+      "role": "workflow:owner",
+      "workflowId": "6Q2oZYwv56ENLBao",
+      "projectId": "SETuOI0q3TN4aDy1"
+    }
+  ],
+  "activeVersion": null,
+  "tags": []
+}
